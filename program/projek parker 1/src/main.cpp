@@ -1,14 +1,16 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <ESPmDNS.h>
+
 
 #define SENSOR1 13
 #define SENSOR2 14
 #define SENSOR3 22
 #define SENSOR4 23
 
-const char* ssid = "ESP32-Parkir";
-const char* password = "12345678";
+const char* ssid = "Smart park ";
+const char* password;
 WebServer server(80);
 
 // Status parkir (0 = kosong, 1 = isi)
@@ -23,7 +25,7 @@ String htmlPage = R"rawliteral(
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>IOT smart park</title>
   <style>
-    body {
+    body { 
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: #1e1e1e;
@@ -111,8 +113,7 @@ String htmlPage = R"rawliteral(
     <div class="location"> SMA Negeri 4 Bojonegoro Smart Park</div>
 
     <div class="info-box">
-      <div style="font-size: 30px;">Web ini menunjukkan jumlah parkir yang tersedia secara realtime</div>
-      <div><strong>🚗</strong></div>
+      <div style="font-size: 25px;">Web ini menunjukkan jumlah parkir yang tersedia secara realtime</div>
     </div>
 
     <div class="park-panel">
@@ -126,8 +127,74 @@ String htmlPage = R"rawliteral(
       <div class="slot-status"><button class="slot-btn">Park A2</button><div id="s2" class="status">❌</div></div>
       <div class="slot-status"><button class="slot-btn">Park A3</button><div id="s3" class="status">❌</div></div>
       <div class="slot-status"><button class="slot-btn">Park A4</button><div id="s4" class="status">❌</div></div>
-    </div>
+      <div class="slot-status">
+      <button class="slot-btn">Park A5</button>
+      <div class="status occupied">❌</div> 
+      </div>
+    
+      
   </div>
+
+  <title>Popup Tengah Besar</title>
+  <style>
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #000000;
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(101, 94, 94, 0.4);
+      z-index: 1000;
+      display: none;
+      font-size: 1.2em;
+      font-family:  'Segoe UI',Arial, sans-serif;
+      text-align: center;
+      max-width: 90%;
+      width: 400px;
+    }
+
+    #popup button {
+      margin-top: 25px;
+      background-color: #ff5722;
+      color: rgb(0, 0, 0);
+      border: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    #popup button:hover {
+      background-color: #e64a19;
+    }
+
+    .popup-title {
+      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .popup-divider {
+      margin: 15px auto;
+      border: none;
+      border-top: 2px solid #ffffff88;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="popup">
+  <div class="popup-title">❗ INFO PENTING ❗</div>
+  <hr class="popup-divider">
+  Tempat parkir A5 sedang dalam perbaikan.
+  <br><br>
+  <button onclick="hidePopup()">Tutup</button>
+</div> 
 
 <script>
   function updateClock() {
@@ -161,6 +228,24 @@ String htmlPage = R"rawliteral(
   }
   setInterval(fetchData, 1000);
   fetchData();
+</script>
+<script>
+  const popup = document.getElementById('popup');
+
+  // Tampilkan popup setelah 1 detik
+  setTimeout(() => {
+    popup.style.display = 'block';
+  }, 1000);
+
+  // Sembunyikan popup otomatis setelah 20 detik
+  setTimeout(() => {
+    hidePopup();
+  }, 20000);
+
+  // Fungsi untuk sembunyikan popup secara manual
+  function hidePopup() {
+    popup.style.display = 'none';
+  }
 </script>
 </body>
 </html>
@@ -197,6 +282,15 @@ void setup() {
   server.on("/", handleRoot);
   server.on("/data", handleData);
   server.begin();
+
+ if (!MDNS.begin("smartpark")) {
+  Serial.println("Error setting up MDNS responder!");
+  while (1) {
+    delay(1000);
+  }
+}
+Serial.println("mDNS responder started");
+
 }
 
 void loop() {
