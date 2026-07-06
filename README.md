@@ -20,7 +20,7 @@ Real-time parking slot monitoring system built with ESP32 and IR sensors. This p
 * 📡 Real-time parking slot monitoring
 * 🌐 Web-based monitoring interface
 * 🔓 Open-source project
-* ⚡ Easy to use and lightweight
+* ⚡ Easy to use 
 * 📱 Accessible from smartphones and computers
 
 ---
@@ -30,7 +30,7 @@ Real-time parking slot monitoring system built with ESP32 and IR sensors. This p
 | Component      | Quantity |
 | -------------- | -------- |
 | ESP32-WROOM-32 | 1        |
-| IR Sensor      | 2        |
+| IR Sensor      | 4        |
 | Jumper Wires   | Several  |
 | Power Supply   | 1        |
 
@@ -39,7 +39,7 @@ Real-time parking slot monitoring system built with ESP32 and IR sensors. This p
 ## 📲 Web Preview
 
 <p align="center">
-  <img width="70%" src="https://github.com/user-attachments/assets/c1e8dbc3-ecff-4006-bd70-41c9950ef32d">
+  <img width="60%" src="https://github.com/user-attachments/assets/c1e8dbc3-ecff-4006-bd70-41c9950ef32d">
 </p>
 
 ---
@@ -55,19 +55,11 @@ Real-time parking slot monitoring system built with ESP32 and IR sensors. This p
 ## ⚙️ Schematics
 
 <p align="center">
-  <img width="70%" src="https://github.com/user-attachments/assets/bb8c1363-14c6-4961-a4eb-724bbf2832ca">
+  <img width="60%" src="https://github.com/user-attachments/assets/bb8c1363-14c6-4961-a4eb-724bbf2832ca">
 </p>
 
 ---
 
-## 🚀 How It Works
-
-1. IR sensors detect vehicle presence.
-2. ESP32 processes sensor data.
-3. Parking status is updated in real time.
-4. Users can monitor parking slots through the web interface.
-
----
 
 ## 📂 Project Structure
 
@@ -96,6 +88,6 @@ Smart-Park/
 
 <div align="center">
 
-Made with ❤️ by SYYA
+Made with ❤️ by a human
 
 </div>
